@@ -18,7 +18,7 @@
 #include "ncols.h"
 #include "countlines.h"
 
-void readcols(std::string fn, std::vector<unsigned int> colsel);
+std::vector< std::vector< std::string > > readcols(std::string fn, std::vector<unsigned int> colsel);
 
 
 

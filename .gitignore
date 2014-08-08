@@ -1,5 +1,4 @@
-*.o
-Debug
-Release
-staticlib
-
+/Debug/
+/Release/
+/staticlib/
+.DS_Store

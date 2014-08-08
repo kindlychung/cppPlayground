@@ -5,12 +5,12 @@
  *      Author: kaiyin
  */
 
-#include <cstdlib>
-#include <unistd.h>
-
-
 #ifndef FILEEXISTS_H_
 #define FILEEXISTS_H_
+
+#include <cstdlib>
+#include <unistd.h>
+#include "armaheader.h"
 
 
 

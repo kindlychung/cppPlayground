@@ -12,6 +12,7 @@
 #include <vector>
 #include <fstream>
 #include "fileExists.h"
+#include "armaheader.h"
 
 size_t ncols(std::string fn);
 

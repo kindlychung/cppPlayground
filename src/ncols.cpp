@@ -11,6 +11,7 @@
 
 // Counts the number of columns of tab / space delimited file.
 // Quoted fields not supported, assumes that no field contains any whitespace!
+
 size_t ncols(std::string fn) {
     try {
         fileExists(fn);
