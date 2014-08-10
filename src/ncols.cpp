@@ -19,8 +19,17 @@ size_t ncols(std::string fn) {
         std::string tmpline;
         std::getline(in_file, tmpline);
         std::vector<std::string> strs;
-        strs = boost::split(strs, tmpline, boost::is_any_of(" \t"), boost::token_compress_on);
-        return strs.size();
+        size_t numCols = 0;
+        std::istringstream lineStream(tmpline);
+        std::string tmpword = "";
+        while(lineStream >> tmpword) {
+        	if(not tmpword.empty()) {
+        		Rcpp::Rcout << "I got word: " << tmpword << "\n";
+        		numCols++;
+        	}
+        }
+
+        return numCols;
     } catch (const std::string& e) {
         std::cerr << "\n" << e << "\n";
         exit(EXIT_FAILURE);

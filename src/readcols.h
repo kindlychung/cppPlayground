@@ -12,13 +12,18 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <algorithm>
 #include "ncols.h"
 #include "countlines.h"
+#include <Rcpp.h>
 
-std::vector< std::vector< std::string > > readcols(std::string fn, std::vector<unsigned int> colsel);
+std::vector<std::vector<std::string> > readcols(std::string fn,
+		std::vector<unsigned int> colsel,
+		size_t nFirstSkipLines = 0,
+		size_t nSkipUnit = 1);
 
 
 

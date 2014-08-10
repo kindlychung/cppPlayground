@@ -9,14 +9,36 @@
 
 // [[Rcpp::export]]
 std::vector<std::vector<std::string> > readcols(std::string fn,
-		std::vector<unsigned int> colsel) {
+		std::vector<unsigned int> colsel, size_t nFirstSkipLines,
+		size_t nSkipUnit) {
+
 	if (colsel.empty()) {
 		throw std::string("You didn't select any column!");
 	}
 
-	unsigned int nc_file = ncols(fn);
-	unsigned int nc = colsel.size();
-	unsigned int nr = countlines(fn);
+
+	size_t nc_file = ncols(fn);
+	Rcpp::Rcout << "File has " << nc_file << " columns \n";
+	size_t nr_file = countlines(fn);
+	Rcpp::Rcout << "File has " << nr_file << " rows \n";
+
+	Rcpp::Rcout << "You want to skip the first " <<  nFirstSkipLines << " lines \n";
+	Rcpp::Rcout << "Of the rest you want to select one line out of every " << nSkipUnit << " lines \n";
+	size_t nr = (size_t) ((nr_file - nFirstSkipLines) / nSkipUnit);
+	Rcpp::Rcout << "You selected " << nr << " rows \n";
+	size_t nc = colsel.size();
+	Rcpp::Rcout << "You selected " << nc << " columns \n";
+
+
+	{
+		size_t remainder = (size_t) ((nr_file - nFirstSkipLines) % nSkipUnit);
+		if (remainder != 0) {
+			std::cerr
+					<< "Number of lines to read is not a multiple of nSkipUnit! \n";
+			nr++;
+		}
+	}
+
 	unsigned int colsel_max = *std::max_element(colsel.begin(), colsel.end());
 
 	if (colsel_max > nc_file) {
@@ -32,26 +54,33 @@ std::vector<std::vector<std::string> > readcols(std::string fn,
 	std::vector<std::vector<std::string> > res(nc,
 			std::vector<std::string>(nr));
 	std::ifstream infile(fn);
-	for (int i = 0; i < nr; i++) {
-		unsigned int n = 0;
-		for (int j = 0; j <= colsel_max; j++) {
-			std::string tmpword;
-			infile >> tmpword;
-			if (std::find(colsel.begin(), colsel.end(), j) != colsel.end()) {
-				res[n][i] = tmpword;
-				n++;
-			}
-		}
-		infile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::string tmpline;
+
+	// skip lines in the beginning
+	for (int lineIter = 0; lineIter < nFirstSkipLines; lineIter++) {
+		getline(infile, tmpline);
 	}
 
-//		std::cout << "Print out cols: " << "\n";
-//		for(std::vector< std::string > resrow : res) {
-//			for(std::string elem : resrow) {
-//				std::cout << elem << " ";
-//			}
-//			std::cout << "\n";
-//		}
+	size_t rowIter = 0;
+	for (size_t lineIter = 0; lineIter < nr_file; lineIter++) {
+		std::string line;
+		getline(infile, line);
+		if (lineIter % nSkipUnit == 0) {
+			istringstream lineStream(line);
+			size_t colIter = 0;
+			for (size_t wordIter = 0; wordIter <= colsel_max; wordIter++) {
+				std::string tmpword;
+				lineStream >> tmpword;
+				if (std::find(colsel.begin(), colsel.end(), wordIter)
+						!= colsel.end()) {
+					res[colIter][rowIter] = tmpword;
+					colIter++;
+				}
+			}
+			rowIter++;
+		}
+	}
+
 	return res;
 }
 

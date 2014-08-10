@@ -11,6 +11,7 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include "fileExists.h"
 #include "armaheader.h"
 

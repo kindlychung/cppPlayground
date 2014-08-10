@@ -22,8 +22,8 @@ using namespace std;
 int main() {
     std::string testfile = "/Users/kaiyin/Desktop/testfile";
     printlines(testfile);
-	std::vector<unsigned int> cols {1, 2, 6};
-	std::vector< std::vector< std::string > > x = readcols(testfile, cols);
+	std::vector<unsigned int> cols {1, 6};
+	std::vector< std::vector< std::string > > x = readcols(testfile, cols, 1, 3);
 	for (std::vector<std::string> col : x) {
 		for (std::string elem : col) {
 			cout << elem << " ";
